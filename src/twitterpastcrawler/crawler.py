@@ -32,6 +32,7 @@ class Tweet:
             replies(int): The number of replies to this tweet.
             retweets(int): The number of times this tweet has been retweeted.
             favorites(int): The number of favorites this tweet has recieved."""
+
     def __init__(self):
         self.links = []
 
@@ -196,12 +197,12 @@ class TwitterCrawler:
             parameters(list): The parameters that will be output to the csv file in the case that the user uses the default handler.
         """
 
-    def __init__(self, query="hoge", lang='en', max_depth=None, parser=parse_html, 
-                    tweet_parser=html_to_tweet_object, handler=tweets_to_csv, 
-                    init_min_pos=None, output_file="output",
-                    parameters=["tweet_id", "account_name", "user_id", 
-                                "timestamp", "text", "links", "repiles",
-                                 "retweets", "favorites"]):
+    def __init__(self, query="hoge", lang='en', max_depth=None, parser=parse_html,
+                 tweet_parser=html_to_tweet_object, handler=tweets_to_csv,
+                 init_min_pos=None, output_file="output",
+                 parameters=["tweet_id", "account_name", "user_id",
+                             "timestamp", "text", "links", "repiles",
+                             "retweets", "favorites"]):
         self.query = query
         self.lang = lang
         self.max_depth = max_depth
@@ -247,11 +248,14 @@ class TwitterCrawler:
                 self.handler(self, item)
 
             # log for debugging
-            with open("log" + self.query + ".txt", "at") as f:
-                f.write(min_pos + "\n")
+            # with open("log" + self.query + ".txt", "at") as f:
+            #     f.write(min_pos + "\n")
 
             if not self.check_if_finished():
                 try:
+                    import time
+                    "sleep for seven second in case of stopped by twitter"
+                    time.sleep(7)
                     r = self.get_request_from_last_position(min_pos)
                 except:
                     connection_cut = True
@@ -280,6 +284,7 @@ class TwitterCrawler:
     def get_request_from_last_position(self, seed):
         ua = random.choice(ualist)
         headers = {"User-Agent": ua}
+        proxies = {"http": "socks5://127.0.0.1:1080", "https": "socks5://127.0.0.1:1080"}
         return requests.get(base_url, params={"q": self.query,
                                               "vertical": "default",
                                               "max_position": seed,
@@ -287,7 +292,7 @@ class TwitterCrawler:
                                               "include_entities": "1",
                                               "include_available_features": "1",
                                               "lang": self.lang
-                                            }, headers=headers)
+                                              }, headers=headers, proxies=proxies)
 
     def dump(self):
         """Print the status of the crawler to stdout."""
