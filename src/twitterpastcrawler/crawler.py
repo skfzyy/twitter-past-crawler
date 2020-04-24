@@ -162,7 +162,7 @@ def tweets_to_csv(crawler, tweet):
         if os.path.exists(crawler.output_file):
             pass
         else:
-            with open(crawler.output_file, "wt") as f:
+            with open(crawler.output_file, "at") as f:
                 f.write(",".join(crawler.parameters))
                 f.write("\n")
 

@@ -2,9 +2,9 @@ from setuptools import setup
 
 
 setup(
-    name='twitterpastcrawler',
+    name='proxytwitter',
 
-    version='0.0.6',
+    version='0.0.1',
 
     description='A crawler that can crawl and accumulate past tweets without using the official API.',
 
