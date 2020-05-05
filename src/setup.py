@@ -4,17 +4,17 @@ from setuptools import setup
 setup(
     name='proxytwitter',
 
-    version='0.0.1',
+    version='0.0.5',
 
     description='A crawler that can crawl and accumulate past tweets without using the official API.',
 
-    url='https://github.com/keitakurita/twitter_past_crawler',
+    url='https://github.com/skfzyy/twitter-past-crawler',
 
-    author='Keita Kurita',
+    author='skfzyy',
 
     license='MIT',
 
-    keywords='twitter crawler',
+    keywords='proxy twitter reptile',
 
     packages=["twitterpastcrawler"],
 
@@ -34,7 +34,7 @@ setup(
         'Development Status :: 3 - Alpha',
 
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.7',
     ]
 
 )

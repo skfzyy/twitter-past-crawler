@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: proxytwitter
+Version: 0.0.5
+Summary: A crawler that can crawl and accumulate past tweets without using the official API.
+Home-page: https://github.com/skfzyy/twitter-past-crawler
+Author: skfzyy
+Author-email: UNKNOWN
+License: MIT
+Description: UNKNOWN
+Keywords: proxy twitter reptile
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.7

@@ -218,7 +218,7 @@ class TwitterCrawler:
 
     def crawl(self):
         """Actual crawl function. Crawls according to the initialization of the crawler."""
-        print("Commencing crawl...")
+        print("connecting crawl...")
         connection_cut = False
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
         response = self.get_request_from_last_position(seed)
@@ -255,7 +255,7 @@ class TwitterCrawler:
                 try:
                     import time
                     "sleep for seven second in case of stopped by twitter"
-                    time.sleep(7)
+                    time.sleep(20)
                     r = self.get_request_from_last_position(min_pos)
                 except:
                     connection_cut = True
@@ -282,9 +282,13 @@ class TwitterCrawler:
             return False
 
     def get_request_from_last_position(self, seed):
+        print("prepare to send requests")
+        import time
+        time.sleep(15)
         ua = random.choice(ualist)
         headers = {"User-Agent": ua}
         proxies = {"http": "socks5://127.0.0.1:1080", "https": "socks5://127.0.0.1:1080"}
+        print("send request to web")
         return requests.get(base_url, params={"q": self.query,
                                               "vertical": "default",
                                               "max_position": seed,
