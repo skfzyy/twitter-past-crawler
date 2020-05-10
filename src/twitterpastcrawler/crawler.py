@@ -238,7 +238,7 @@ class TwitterCrawler:
                 if not connection_cut and min_pos == self.last_min_pos:
                     print("Starting to loop! Exitting with status:")
                     self.dump()
-                    sys.exit(1)
+                    return
 
             self.last_min_pos = min_pos
             html = data["items_html"]
