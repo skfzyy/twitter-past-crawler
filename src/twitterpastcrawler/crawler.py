@@ -119,7 +119,14 @@ def html_to_tweet_object(element):
                 for p in text.findChildren():
                     if has_class(p, "tweet-text"):
                         if hasattr(p, "contents") and not isinstance(p.contents[0], type(p)):
-                            tweet.text = clean_text(p.contents[0])
+                            twi_content = ""
+                            for ele in p.contents:
+                                if not isinstance(ele, type(p)):
+                                    twi_content += ele
+                                else:
+                                    if len(ele.contents) == 1 and not isinstance(ele.contents[0], type(p)):
+                                        twi_content += ele.contents[0]
+                            tweet.text = clean_text(twi_content)
 
                     if has_class(p, "twitter-timeline-link"):
                         if "data-expanded-url" in p.attrs:
@@ -216,12 +223,12 @@ class TwitterCrawler:
         self.depth = None
         self.end_reason = None
 
-    def crawl(self):
+    def crawl(self, proxy=True):
         """Actual crawl function. Crawls according to the initialization of the crawler."""
         print("connecting crawl...")
         connection_cut = False
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
-        response = self.get_request_from_last_position(seed)
+        response = self.get_request_from_last_position(seed, proxy=proxy)
 
         self.depth = 0
 
@@ -229,6 +236,11 @@ class TwitterCrawler:
             self.depth += 1
 
             data = response.json()
+
+            # with open(self.output_file,"w") as json_file:
+            #     import json
+            #     json_file.write(json.dumps(data))
+            #     return
 
             # data is a python dictionary
             # data should come with keys ['new_latent_count', 'items_html', 'min_position', 'focused_refresh_interval', 'has_more_items']
@@ -256,7 +268,7 @@ class TwitterCrawler:
                     import time
                     "sleep for seven second in case of stopped by twitter"
                     time.sleep(20)
-                    r = self.get_request_from_last_position(min_pos)
+                    r = self.get_request_from_last_position(min_pos, proxy=proxy)
                 except:
                     connection_cut = True
                     continue
@@ -281,7 +293,7 @@ class TwitterCrawler:
         else:
             return False
 
-    def get_request_from_last_position(self, seed):
+    def get_request_from_last_position(self, seed, proxy=True):
         print("prepare to send requests")
         import time
         time.sleep(15)
@@ -289,14 +301,20 @@ class TwitterCrawler:
         headers = {"User-Agent": ua}
         proxies = {"http": "socks5://127.0.0.1:1080", "https": "socks5://127.0.0.1:1080"}
         print("send request to web")
-        return requests.get(base_url, params={"q": self.query,
-                                              "vertical": "default",
-                                              "max_position": seed,
-                                              "src": "typd",
-                                              "include_entities": "1",
-                                              "include_available_features": "1",
-                                              "lang": self.lang
-                                              }, headers=headers, proxies=proxies)
+        # return requests.get(base_url, verify=False, params={"q": self.query,
+        #                                                     "vertical": "default",
+        #                                                     "max_position": seed,
+        #                                                     "src": "typd",
+        #                                                     "include_entities": "1",
+        #                                                     "include_available_features": "1",
+        #                                                     "lang": self.lang
+        #                                                     }, headers=headers, proxies=proxies)
+        url = base_url + "?q=" + str(self.query) + "&vertical=default&max_position=" + str(
+            seed) + "&src=typd&include_entities=1&include_available_features=1&lang=" + str(self.lang)
+        if proxy:
+            return requests.get(url, verify=False, headers=headers, proxies=proxies)
+        else:
+            return requests.get(url, verify=False, headers=headers)
 
     def dump(self):
         """Print the status of the crawler to stdout."""
